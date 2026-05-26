@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Feedback – LeftoverFood{% endblock %}
+{% block page_title %}💬 Feedback{% endblock %}
+{% block content %}
+<div style="max-width:700px;margin:0 auto">
+  <div class="card">
+    <div class="card-hdr"><i class="fas fa-comment-dots"></i> Share Your Feedback</div>
+    {% if error %}<div class="err-msg"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>{% endif %}
+    <form method="POST" action="{{ url_for('feedback') }}">
+      <div class="form-grid">
+        <div class="form-group full"><label>Your Name *</label>
+          <input type="text" name="name" placeholder="Enter your name" required/></div>
+        <div class="form-group full"><label>Your Feedback *</label>
+          <textarea name="message" rows="4" placeholder="Tell us what you think…" required></textarea></div>
+      </div>
+      <button type="submit" class="btn btn-green" style="margin-top:14px"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+    </form>
+  </div>
+  {% if feedbacks %}
+  <div class="card">
+    <div class="card-hdr"><i class="fas fa-comments"></i> Community Feedback</div>
+    {% for fb in feedbacks %}
+    <div style="border-bottom:1px solid #e0e4d8;padding:14px 0{% if loop.last %};border-bottom:none{% endif %}">
+      <div style="font-weight:800;color:#1b5e20;font-size:.92rem">{{ fb.name }}</div>
+      <div style="color:#374151;font-size:.88rem;margin-top:4px">{{ fb.message }}</div>
+      <div style="font-size:.76rem;color:#9ca3af;margin-top:4px">{{ fb.created_at[:10] if fb.created_at else '' }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

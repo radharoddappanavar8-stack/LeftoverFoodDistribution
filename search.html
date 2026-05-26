@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Search Donations – LeftoverFood{% endblock %}
+{% block page_title %}🔍 Search Food Donations{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-search"></i> Search Available Food</div>
+  <form method="POST" action="{{ url_for('search_donations') }}" style="display:flex;gap:10px;flex-wrap:wrap">
+    <input type="text" name="keyword" value="{{ keyword }}" placeholder="Search by food name, description, or location…"
+           style="flex:1;min-width:220px" required/>
+    <button type="submit" class="btn btn-green"><i class="fas fa-search"></i> Search</button>
+    {% if keyword %}
+    <a href="{{ url_for('search_donations') }}" class="btn btn-ghost"><i class="fas fa-times"></i> Clear</a>
+    {% endif %}
+  </form>
+</div>
+
+{% if keyword %}
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-list"></i>
+    Results for "{{ keyword }}" — {{ results|length }} found
+  </div>
+  {% if results %}
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Food Item</th><th>Qty</th><th>Address</th><th>Donor</th><th>Contact</th><th>Status</th>
+          {% if session.role=='collector' %}<th>Action</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in results %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td><strong>{{ f.title }}</strong><br><small style="color:#6b7280">{{ f.description or '' }}</small></td>
+          <td>{{ f.quantity }}</td>
+          <td style="font-size:.82rem">{{ f.address }}</td>
+          <td>{{ f.donor_name }}</td>
+          <td style="font-size:.82rem">{{ f.donor_phone or '—' }}</td>
+          <td><span class="badge b-{{ f.status|lower }}">{{ f.status }}</span></td>
+          {% if session.role=='collector' %}
+          <td>
+            {% if f.status=='Available' %}
+            <form method="POST" action="{{ url_for('mark_collected', fid=f.id) }}">
+              <button class="btn btn-orange btn-sm" type="submit"><i class="fas fa-check"></i> Claim</button>
+            </form>
+            {% else %}<span style="font-size:.78rem;color:#43a047">✅ Done</span>{% endif %}
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:40px;color:#6b7280">
+    <div style="font-size:3rem;margin-bottom:12px">🔍</div>
+    <p>No donations matched "<strong>{{ keyword }}</strong>". Try a different keyword.</p>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

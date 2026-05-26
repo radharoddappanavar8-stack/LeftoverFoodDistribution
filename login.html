@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login – LeftoverFood Distribution System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;display:flex;font-family:'Nunito',sans-serif;
+      background:linear-gradient(135deg,#1b5e20 0%,#2e7d32 45%,#f9a825 100%)}
+    .left{flex:1;display:flex;flex-direction:column;align-items:center;
+      justify-content:center;padding:40px;color:#fff}
+    .left .brand{font-family:'Poppins',sans-serif;font-size:2.6rem;font-weight:800;line-height:1.15}
+    .left .brand span{color:#f9a825}
+    .left .sub{margin-top:14px;font-size:1rem;opacity:.88;max-width:340px;line-height:1.6}
+    .features{margin-top:38px;display:flex;flex-direction:column;gap:14px}
+    .feat{display:flex;align-items:center;gap:13px}
+    .feat-icon{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.15);
+      display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+    .feat-t{font-weight:700;font-size:.93rem}
+    .feat-d{font-size:.78rem;opacity:.72}
+    .right{width:430px;background:#fff;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;padding:48px 42px;
+      box-shadow:-10px 0 40px rgba(0,0,0,.15)}
+    .r-icon{font-size:2.6rem;margin-bottom:6px}
+    .r-title{font-family:'Poppins',sans-serif;font-size:1.55rem;font-weight:800;color:#1b5e20}
+    .r-sub{font-size:.83rem;color:#6b7280;margin-top:4px;margin-bottom:26px;text-align:center}
+    .err{width:100%;background:#ffebee;border:1px solid #ef9a9a;color:#c62828;
+      border-radius:9px;padding:10px 14px;font-size:.86rem;font-weight:600;
+      margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .ok{background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7}
+    .fg{width:100%;margin-bottom:16px}
+    .fg label{display:block;font-weight:700;font-size:.83rem;color:#374151;margin-bottom:6px}
+    .iw{position:relative}
+    .iw i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#9ca3af}
+    .iw input{width:100%;padding:10px 13px 10px 38px;border:2px solid #e5e7eb;
+      border-radius:9px;font-size:.9rem;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s}
+    .iw input:focus{border-color:#2e7d32}
+    .btn-login{width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;
+      border-radius:9px;font-size:.97rem;font-weight:800;cursor:pointer;
+      font-family:'Nunito',sans-serif;transition:background .2s;margin-top:4px}
+    .btn-login:hover{background:#43a047}
+    .links{margin-top:18px;font-size:.86rem;color:#6b7280;text-align:center}
+    .links a{color:#2e7d32;font-weight:700;text-decoration:none}
+    .links a:hover{text-decoration:underline}
+    .demo{width:100%;margin-top:22px;background:#f0f7f0;border-radius:9px;
+      padding:13px 15px;border:1px solid #c8e6c9}
+    .demo-t{font-weight:800;font-size:.77rem;color:#2e7d32;text-transform:uppercase;
+      letter-spacing:.06em;margin-bottom:7px}
+    .dc{display:flex;justify-content:space-between;font-size:.79rem;color:#374151;padding:2px 0}
+    .dc span{font-weight:700;color:#1b5e20}
+    @media(max-width:700px){.left{display:none}.right{width:100%}}
+  </style>
+</head>
+<body>
+<div class="left">
+  <div class="brand">🍲 Leftover<br><span>Food</span> Share</div>
+  <p class="sub">Connecting donors, volunteers, and communities — reducing food waste, fighting hunger.</p>
+  <div class="features">
+    <div class="feat"><div class="feat-icon">🤝</div>
+      <div><div class="feat-t">Easy Donation</div><div class="feat-d">Donors list surplus food in seconds</div></div></div>
+    <div class="feat"><div class="feat-icon">🚚</div>
+      <div><div class="feat-t">Quick Pickup</div><div class="feat-d">Collectors grab and distribute food</div></div></div>
+    <div class="feat"><div class="feat-icon">🛡️</div>
+      <div><div class="feat-t">Secure Login</div><div class="feat-d">Hashed passwords + role-based access</div></div></div>
+  </div>
+</div>
+
+<div class="right">
+  <div class="r-icon">🔐</div>
+  <div class="r-title">Welcome Back</div>
+  <div class="r-sub">Sign in to your account to continue</div>
+
+  {% if error %}
+  <div class="err"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+  {% endif %}
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+    <div class="err ok"><i class="fas fa-check-circle"></i> {{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('login') }}" style="width:100%">
+    <div class="fg">
+      <label for="username">Username or Email</label>
+      <div class="iw"><i class="fas fa-user"></i>
+        <input type="text" id="username" name="username" placeholder="Enter username or email" required/>
+      </div>
+    </div>
+    <div class="fg">
+      <label for="password">Password</label>
+      <div class="iw"><i class="fas fa-lock"></i>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required/>
+      </div>
+    </div>
+    <div style="text-align:right;margin-bottom:12px;font-size:.82rem">
+      <a href="{{ url_for('forgot_password') }}" style="color:#2e7d32;font-weight:700;text-decoration:none">Forgot Password?</a>
+    </div>
+    <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> &nbsp;Login</button>
+  </form>
+
+  <div class="links">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></div>
+
+  <div class="demo">
+    <div class="demo-t">🔑 Demo Credentials</div>
+    <div class="dc">Admin: <span>admin / admin123</span></div>
+    <div class="dc">Donor: <span>donor1 / donor123</span></div>
+    <div class="dc">Collector: <span>collector1 / collect123</span></div>
+  </div>
+</div>
+</body>
+</html>

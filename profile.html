@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}My Profile – LeftoverFood{% endblock %}
+{% block page_title %}👤 My Profile{% endblock %}
+
+{% block content %}
+<div style="max-width:640px;margin:0 auto">
+
+  {% if error %}
+  <div class="err-msg"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+  {% endif %}
+
+  <!-- Profile Info -->
+  <div class="card">
+    <div class="card-hdr"><i class="fas fa-user-circle"></i> Account Information</div>
+    <div style="display:flex;align-items:center;gap:18px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #e0e4d8">
+      <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#2e7d32,#43a047);
+        display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;font-weight:800">
+        {{ user.name[0].upper() }}
+      </div>
+      <div>
+        <div style="font-size:1.15rem;font-weight:800;color:#1b5e20">{{ user.name }}</div>
+        <div style="font-size:.85rem;color:#6b7280">@{{ user.username }}</div>
+        <span class="badge b-{{ user.role }}" style="margin-top:5px;display:inline-block">{{ user.role }}</span>
+      </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('profile') }}">
+      <input type="hidden" name="action" value="update_profile"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" name="name" value="{{ user.name }}" required/>
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" value="{{ user.username }}" disabled style="background:#f5f5f5;cursor:not-allowed"/>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" name="email" value="{{ user.email }}" required/>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" name="phone" value="{{ user.phone or '' }}" placeholder="Phone number"/>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-green" style="margin-top:16px"><i class="fas fa-save"></i> Update Profile</button>
+    </form>
+  </div>
+
+  <!-- Change Password -->
+  <div class="card">
+    <div class="card-hdr"><i class="fas fa-lock"></i> Change Password</div>
+    <div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:.84rem;color:#f57f17">
+      <i class="fas fa-shield-alt"></i> &nbsp;Your password is stored as a <strong>SHA-256 hash</strong> — never as plain text.
+    </div>
+    <form method="POST" action="{{ url_for('profile') }}">
+      <input type="hidden" name="action" value="change_password"/>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Current Password *</label>
+          <input type="password" name="current_password" placeholder="Enter your current password" required/>
+        </div>
+        <div class="form-group">
+          <label>New Password *</label>
+          <input type="password" name="new_password" placeholder="Min 6 characters" required/>
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password *</label>
+          <input type="password" name="confirm_password" placeholder="Repeat new password" required/>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-orange" style="margin-top:16px"><i class="fas fa-key"></i> Change Password</button>
+    </form>
+  </div>
+
+  <!-- Account Details Read-only -->
+  <div class="card">
+    <div class="card-hdr"><i class="fas fa-info-circle"></i> Account Details</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:.88rem">
+      <div><span style="color:#6b7280;font-weight:600">Role:</span><br><span class="badge b-{{ user.role }}">{{ user.role }}</span></div>
+      <div><span style="color:#6b7280;font-weight:600">Member Since:</span><br><strong>{{ user.created_at[:10] if user.created_at else '—' }}</strong></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

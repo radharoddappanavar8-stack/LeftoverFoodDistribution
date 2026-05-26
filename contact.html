@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Contact – LeftoverFood{% endblock %}
+{% block page_title %}📧 Contact Us{% endblock %}
+{% block content %}
+<div style="max-width:680px;margin:0 auto">
+  <div class="card">
+    <div class="card-hdr"><i class="fas fa-envelope"></i> Get In Touch</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px">
+      <div style="background:#f0f7f0;border-radius:10px;padding:18px;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:6px">📍</div>
+        <div style="font-weight:800;color:#1b5e20">Address</div>
+        <div style="font-size:.84rem;color:#6b7280;margin-top:4px">Karnataka, India</div>
+      </div>
+      <div style="background:#e3f2fd;border-radius:10px;padding:18px;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:6px">📞</div>
+        <div style="font-weight:800;color:#1565c0">Phone</div>
+        <div style="font-size:.84rem;color:#6b7280;margin-top:4px">+91 90000 00000</div>
+      </div>
+      <div style="background:#fff8e1;border-radius:10px;padding:18px;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:6px">✉️</div>
+        <div style="font-weight:800;color:#f57f17">Email</div>
+        <div style="font-size:.84rem;color:#6b7280;margin-top:4px">contact@leftoverfood.in</div>
+      </div>
+      <div style="background:#fce4ec;border-radius:10px;padding:18px;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:6px">🕐</div>
+        <div style="font-weight:800;color:#c62828">Hours</div>
+        <div style="font-size:.84rem;color:#6b7280;margin-top:4px">Mon–Sat, 9am–6pm</div>
+      </div>
+    </div>
+    <div style="background:#e8f5e9;border-radius:10px;padding:16px 20px;text-align:center">
+      <p style="font-size:.9rem;color:#2e7d32;font-weight:600">
+        For urgent food donation pickups, please use the <a href="{{ url_for('search_donations') }}" style="color:#1b5e20">Search</a> page or contact a collector directly from the <a href="{{ url_for('collectors_list') }}" style="color:#1b5e20">Collectors List</a>.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

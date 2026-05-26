@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}About Us – LeftoverFood{% endblock %}
+{% block page_title %}ℹ️ About Us{% endblock %}
+{% block content %}
+<div class="card" style="max-width:800px;margin:0 auto">
+  <div style="text-align:center;padding:20px 0 28px">
+    <div style="font-size:4rem">🍲</div>
+    <h2 style="font-family:'Poppins',sans-serif;color:#1b5e20;font-size:1.8rem;margin-top:10px">LeftoverFood Distribution System</h2>
+    <p style="color:#6b7280;margin-top:8px;font-size:1rem">Reducing food waste. Fighting hunger. Building community.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:28px">
+    <div style="text-align:center;padding:20px;background:#f0f7f0;border-radius:12px">
+      <div style="font-size:2rem;margin-bottom:8px">🤝</div>
+      <div style="font-weight:800;color:#1b5e20">Donors</div>
+      <div style="font-size:.83rem;color:#6b7280;margin-top:4px">Share surplus cooked or packaged food with those in need</div>
+    </div>
+    <div style="text-align:center;padding:20px;background:#fff3e0;border-radius:12px">
+      <div style="font-size:2rem;margin-bottom:8px">🚚</div>
+      <div style="font-weight:800;color:#e65100">Collectors</div>
+      <div style="font-size:.83rem;color:#6b7280;margin-top:4px">Volunteers who pick up and distribute food to hunger spots</div>
+    </div>
+    <div style="text-align:center;padding:20px;background:#e8eaf6;border-radius:12px">
+      <div style="font-size:2rem;margin-bottom:8px">🛡️</div>
+      <div style="font-weight:800;color:#283593">Admins</div>
+      <div style="font-size:.83rem;color:#6b7280;margin-top:4px">Manage the system, users, and ensure smooth operations</div>
+    </div>
+  </div>
+  <div style="background:#e8f5e9;border-radius:10px;padding:18px 22px">
+    <div style="font-weight:800;color:#2e7d32;margin-bottom:8px">🎓 BCA Final Year Project</div>
+    <p style="font-size:.88rem;color:#374151;line-height:1.7">
+      This project was developed as part of a BCA Final Year project. It demonstrates real-world application of
+      Python Flask, SQLite database management, user authentication with hashlib password hashing,
+      role-based access control, session management, and input validation — all combined into a socially useful application.
+    </p>
+  </div>
+</div>
+{% endblock %}

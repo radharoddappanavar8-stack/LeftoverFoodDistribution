@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Register – LeftoverFood System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;display:flex;align-items:center;justify-content:center;
+      font-family:'Nunito',sans-serif;
+      background:linear-gradient(135deg,#1b5e20 0%,#2e7d32 50%,#f9a825 100%);padding:36px 16px}
+    .card{background:#fff;border-radius:18px;padding:40px 44px;width:100%;max-width:580px;
+      box-shadow:0 20px 60px rgba(0,0,0,.2)}
+    .hdr{text-align:center;margin-bottom:28px}
+    .hdr .icon{font-size:2.3rem}
+    .hdr h1{font-family:'Poppins',sans-serif;font-size:1.6rem;font-weight:800;color:#1b5e20;margin-top:5px}
+    .hdr p{color:#6b7280;font-size:.84rem;margin-top:3px}
+    .err{background:#ffebee;border:1px solid #ef9a9a;color:#c62828;border-radius:9px;
+      padding:10px 14px;font-size:.86rem;font-weight:600;margin-bottom:18px;
+      display:flex;align-items:center;gap:8px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+    .fg{display:flex;flex-direction:column;gap:5px}
+    .fg.full{grid-column:1/-1}
+    label{font-weight:700;font-size:.82rem;color:#374151}
+    .iw{position:relative}
+    .iw i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9ca3af}
+    .iw input,.iw select{width:100%;padding:9px 12px 9px 36px;border:2px solid #e5e7eb;
+      border-radius:8px;font-size:.88rem;font-family:'Nunito',sans-serif;outline:none;transition:border-color .2s}
+    .iw input:focus,.iw select:focus{border-color:#2e7d32}
+    .iw select{cursor:pointer}
+    .role-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+    .role-card{border:2px solid #e5e7eb;border-radius:9px;padding:12px;cursor:pointer;transition:all .2s;text-align:center}
+    .role-card:hover{border-color:#2e7d32;background:#f0f7f0}
+    .role-card input[type=radio]{display:none}
+    .role-card.selected{border-color:#2e7d32;background:#e8f5e9}
+    .role-card .rc-icon{font-size:1.6rem}
+    .role-card .rc-name{font-weight:800;font-size:.88rem;color:#1b5e20;margin-top:4px}
+    .role-card .rc-desc{font-size:.73rem;color:#6b7280;margin-top:2px}
+    .btn-reg{width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;
+      border-radius:9px;font-size:.97rem;font-weight:800;cursor:pointer;
+      font-family:'Nunito',sans-serif;margin-top:18px;transition:background .2s}
+    .btn-reg:hover{background:#43a047}
+    .lnk{text-align:center;margin-top:16px;font-size:.86rem;color:#6b7280}
+    .lnk a{color:#2e7d32;font-weight:700;text-decoration:none}
+    .req{color:#c62828;font-size:.8rem;margin-left:2px}
+    @media(max-width:540px){.grid{grid-template-columns:1fr}.card{padding:28px 20px}.role-cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="hdr">
+    <div class="icon">🍲</div>
+    <h1>Create Account</h1>
+    <p>Join the LeftoverFood Distribution System</p>
+  </div>
+
+  {% if error %}
+  <div class="err"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('register') }}">
+    <div class="grid">
+      <div class="fg">
+        <label>Full Name <span class="req">*</span></label>
+        <div class="iw"><i class="fas fa-id-card"></i>
+          <input type="text" name="name" placeholder="Your full name" required/>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Username <span class="req">*</span></label>
+        <div class="iw"><i class="fas fa-user"></i>
+          <input type="text" name="username" placeholder="Min 4 characters" required/>
+        </div>
+      </div>
+      <div class="fg full">
+        <label>Email Address <span class="req">*</span></label>
+        <div class="iw"><i class="fas fa-envelope"></i>
+          <input type="email" name="email" placeholder="your@email.com" required/>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Password <span class="req">*</span></label>
+        <div class="iw"><i class="fas fa-lock"></i>
+          <input type="password" name="password" placeholder="Min 6 characters" required/>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Confirm Password <span class="req">*</span></label>
+        <div class="iw"><i class="fas fa-lock"></i>
+          <input type="password" name="confirm_password" placeholder="Repeat password" required/>
+        </div>
+      </div>
+      <div class="fg full">
+        <label>Phone Number</label>
+        <div class="iw"><i class="fas fa-phone"></i>
+          <input type="text" name="phone" placeholder="e.g. 9876543210"/>
+        </div>
+      </div>
+      <div class="fg full">
+        <label>Register As <span class="req">*</span></label>
+        <div class="role-cards" id="roleCards">
+          <label class="role-card selected" onclick="selectRole(this,'donor')">
+            <input type="radio" name="role" value="donor" checked/>
+            <div class="rc-icon">🤝</div>
+            <div class="rc-name">Donor</div>
+            <div class="rc-desc">I want to donate surplus food</div>
+          </label>
+          <label class="role-card" onclick="selectRole(this,'collector')">
+            <input type="radio" name="role" value="collector"/>
+            <div class="rc-icon">🚚</div>
+            <div class="rc-name">Collector</div>
+            <div class="rc-desc">I want to collect & distribute food</div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn-reg"><i class="fas fa-user-plus"></i> &nbsp;Create Account</button>
+  </form>
+  <div class="lnk">Already have an account? <a href="{{ url_for('login') }}">Login here</a></div>
+</div>
+<script>
+function selectRole(el,val){
+  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</body>
+</html>

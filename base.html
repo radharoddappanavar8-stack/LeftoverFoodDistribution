@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{% block title %}LeftoverFood Distribution System{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root{--green:#2e7d32;--green-d:#1b5e20;--green-l:#43a047;--orange:#e65100;--orange-l:#fb8c00;--yellow:#f9a825;--red:#c62828;--blue:#1565c0;--bg:#f1fdf4;--card:#fff;--text:#1a1a1a;--muted:#6b7280;--border:#d8ead9;--sidebar:#1b5e20;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+    .sidebar{width:240px;min-height:100vh;background:var(--sidebar);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:200;box-shadow:3px 0 18px rgba(0,0,0,.22);}
+    .sb-brand{padding:22px 18px 14px;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .sb-brand .logo{font-family:'Poppins',sans-serif;font-size:1.4rem;font-weight:800}
+    .sb-brand .logo span{color:var(--yellow)}
+    .sb-brand .sub{font-size:.68rem;opacity:.6;margin-top:3px}
+    .sb-user{margin:10px;background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px}
+    .sb-user .uname{font-weight:800;font-size:.92rem}
+    .sb-user .urole{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:20px;display:inline-block;margin-top:4px}
+    .role-admin{background:#c62828}.role-donor{background:#1565c0}.role-collector{background:#6a1571}
+    .sb-nav{flex:1;padding:6px 0}
+    .sb-sec{font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.38);padding:13px 18px 5px}
+    .nav-a{display:flex;align-items:center;gap:11px;padding:10px 18px;color:rgba(255,255,255,.8);text-decoration:none;font-size:.88rem;font-weight:600;border-left:3px solid transparent;transition:all .18s}
+    .nav-a:hover,.nav-a.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--yellow)}
+    .nav-a i{width:17px;text-align:center;font-size:.9rem}
+    .sb-foot{padding:14px 18px;border-top:1px solid rgba(255,255,255,.1)}
+    .btn-logout{display:flex;align-items:center;gap:9px;width:100%;padding:9px 13px;border-radius:8px;background:rgba(255,255,255,.07);color:#ffcdd2;text-decoration:none;font-weight:700;font-size:.85rem;border:1px solid rgba(255,255,255,.1);transition:all .2s}
+    .btn-logout:hover{background:var(--red);color:#fff}
+    .main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+    .topbar{background:var(--card);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+    .topbar h1{font-size:1.15rem;font-weight:800;color:var(--green)}
+    .topbar .clock{font-size:.8rem;color:var(--muted)}
+    .content{padding:26px 28px;flex:1}
+    .alert{padding:11px 16px;border-radius:9px;margin-bottom:16px;font-size:.88rem;font-weight:600;display:flex;align-items:center;gap:9px}
+    .alert-success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+    .alert-danger{background:#ffebee;color:#c62828;border:1px solid #ef9a9a}
+    .alert-warning{background:#fff8e1;color:#f57f17;border:1px solid #ffe082}
+    .alert-info{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+    .card{background:var(--card);border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:22px;margin-bottom:22px}
+    .card-hdr{font-size:.97rem;font-weight:800;color:var(--green);margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:13px;border-bottom:2px solid var(--border)}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:24px}
+    .stat-card{background:var(--card);border-radius:13px;padding:18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.07);border-top:4px solid var(--green);transition:transform .2s}
+    .stat-card:hover{transform:translateY(-3px)}
+    .stat-card.or{border-top-color:var(--orange)}.stat-card.bl{border-top-color:var(--blue)}.stat-card.pu{border-top-color:#6a1571}
+    .stat-num{font-size:2rem;font-weight:800;color:var(--green)}
+    .stat-card.or .stat-num{color:var(--orange)}.stat-card.bl .stat-num{color:var(--blue)}.stat-card.pu .stat-num{color:#6a1571}
+    .stat-lbl{font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+    .tbl-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:.86rem}
+    thead th{background:var(--green);color:#fff;padding:10px 13px;text-align:left;font-weight:700;font-size:.77rem;text-transform:uppercase;letter-spacing:.06em}
+    thead th:first-child{border-radius:8px 0 0 0}thead th:last-child{border-radius:0 8px 0 0}
+    tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+    tbody tr:hover{background:#f0f7f0}
+    td{padding:10px 13px}
+    .badge{padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase}
+    .b-available{background:#e8f5e9;color:#2e7d32}.b-collected{background:#fff8e1;color:#f57f17}
+    .b-admin{background:#ffebee;color:#c62828}.b-donor{background:#e3f2fd;color:#1565c0}.b-collector{background:#f3e5f5;color:#6a1571}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:.86rem;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all .18s;font-family:'Nunito',sans-serif}
+    .btn-green{background:var(--green);color:#fff}.btn-green:hover{background:var(--green-l)}
+    .btn-orange{background:var(--orange);color:#fff}.btn-orange:hover{background:var(--orange-l)}
+    .btn-red{background:var(--red);color:#fff}.btn-red:hover{background:#b71c1c}
+    .btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:#1976d2}
+    .btn-ghost{background:transparent;color:var(--green);border:2px solid var(--green)}.btn-ghost:hover{background:var(--green);color:#fff}
+    .btn-sm{padding:5px 11px;font-size:.78rem}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-group{display:flex;flex-direction:column;gap:5px}
+    .form-group.full{grid-column:1/-1}
+    label{font-weight:700;font-size:.83rem;color:var(--text)}
+    input,select,textarea{padding:9px 13px;border-radius:8px;border:2px solid var(--border);background:#fff;font-size:.88rem;font-family:'Nunito',sans-serif;transition:border-color .2s;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--green)}
+    textarea{resize:vertical;min-height:75px}
+    .err-msg{background:#ffebee;color:var(--red);border:1px solid #ef9a9a;padding:9px 14px;border-radius:8px;font-size:.86rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    @media(max-width:768px){.sidebar{width:200px}.main{margin-left:200px}.content{padding:18px 14px}.form-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+{% if session.user_id %}
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="logo">🍲 Leftover<span>Food</span></div>
+    <div class="sub">Distribution System</div>
+  </div>
+  <div class="sb-user">
+    <div class="uname">{{ session.name }}</div>
+    <span class="urole role-{{ session.role }}">{{ session.role }}</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <a href="{{ url_for('index') }}" class="nav-a {% if request.endpoint=='index' %}active{% endif %}"><i class="fas fa-home"></i> Home</a>
+    {% if session.role == 'admin' %}
+    <a href="{{ url_for('admin_dashboard') }}" class="nav-a {% if request.endpoint=='admin_dashboard' %}active{% endif %}"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</a>
+    {% elif session.role == 'donor' %}
+    <a href="{{ url_for('donor_dashboard') }}" class="nav-a {% if request.endpoint=='donor_dashboard' %}active{% endif %}"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
+    <a href="{{ url_for('donate') }}" class="nav-a {% if request.endpoint=='donate' %}active{% endif %}"><i class="fas fa-hand-holding-heart"></i> Donate Food</a>
+    {% elif session.role == 'collector' %}
+    <a href="{{ url_for('collector_dashboard') }}" class="nav-a {% if request.endpoint=='collector_dashboard' %}active{% endif %}"><i class="fas fa-tachometer-alt"></i> My Dashboard</a>
+    {% endif %}
+    <a href="{{ url_for('search_donations') }}" class="nav-a {% if request.endpoint=='search_donations' %}active{% endif %}"><i class="fas fa-search"></i> Search Food</a>
+    <div class="sb-sec">Info</div>
+    <a href="{{ url_for('hunger_spots') }}" class="nav-a {% if request.endpoint=='hunger_spots' %}active{% endif %}"><i class="fas fa-map-marker-alt"></i> Hunger Spots</a>
+    <a href="{{ url_for('collectors_list') }}" class="nav-a {% if request.endpoint=='collectors_list' %}active{% endif %}"><i class="fas fa-users"></i> Collectors List</a>
+    <a href="{{ url_for('gallery') }}" class="nav-a {% if request.endpoint=='gallery' %}active{% endif %}"><i class="fas fa-images"></i> Gallery</a>
+    <a href="{{ url_for('feedback') }}" class="nav-a {% if request.endpoint=='feedback' %}active{% endif %}"><i class="fas fa-comment-dots"></i> Feedback</a>
+    <a href="{{ url_for('contact') }}" class="nav-a {% if request.endpoint=='contact' %}active{% endif %}"><i class="fas fa-envelope"></i> Contact</a>
+    <div class="sb-sec">Account</div>
+    <a href="{{ url_for('profile') }}" class="nav-a {% if request.endpoint=='profile' %}active{% endif %}"><i class="fas fa-user-circle"></i> My Profile</a>
+  </nav>
+  <div class="sb-foot">
+    <a href="{{ url_for('logout') }}" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+    <div style="display:flex;align-items:center;gap:16px">
+      {% if session.user_id %}
+      <div style="position:relative;cursor:pointer" id="notif_bell" onclick="toggleNotifPanel()">
+        <i class="fas fa-bell" style="font-size:1.2rem;color:var(--green)"></i>
+        <span id="notif_badge" style="display:none;position:absolute;top:-6px;right:-7px;background:#c62828;color:#fff;border-radius:50%;font-size:.6rem;font-weight:800;min-width:17px;height:17px;line-height:17px;text-align:center;padding:0 3px"></span>
+      </div>
+      <div id="notif_panel" style="display:none;position:fixed;top:55px;right:20px;width:340px;max-height:400px;overflow-y:auto;background:#fff;border-radius:13px;box-shadow:0 8px 30px rgba(0,0,0,.18);z-index:9999;border:1px solid var(--border)">
+        <div style="padding:12px 16px;font-weight:800;color:var(--green);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <span><i class="fas fa-bell"></i> Notifications</span>
+          <button onclick="markAllRead()" style="background:none;border:none;cursor:pointer;font-size:.75rem;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700">Mark all read</button>
+        </div>
+        <div id="notif_list" style="padding:8px 0"><div style="padding:16px;text-align:center;color:var(--muted);font-size:.85rem">Loading...</div></div>
+      </div>
+      {% endif %}
+      <span class="clock" id="clock"></span>
+    </div>
+  </div>
+  <div class="content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in messages %}
+        <div class="alert alert-{{ cat }}"><i class="fas fa-info-circle"></i> {{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</div>
+{% else %}
+  {% block auth_content %}{% endblock %}
+{% endif %}
+<script>
+function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleString('en-IN',{weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+tick();setInterval(tick,1000);
+
+// Notifications
+{% if session.user_id %}
+function fetchNotifications(){
+  fetch('/api/notifications').then(r=>r.json()).then(data=>{
+    var badge=document.getElementById('notif_badge');
+    if(data.unread>0){badge.style.display='inline-block';badge.textContent=data.unread;}
+    else{badge.style.display='none';}
+    var list=document.getElementById('notif_list');
+    if(!list)return;
+    if(data.notifications.length===0){list.innerHTML='<div style="padding:16px;text-align:center;color:#6b7280;font-size:.85rem">No notifications yet.</div>';return;}
+    list.innerHTML=data.notifications.map(n=>`
+      <div style="padding:11px 16px;border-bottom:1px solid #f0f0f0;background:${n.is_read?'#fff':'#f0fdf4'};font-size:.83rem">
+        <div style="color:#1a1a1a;font-weight:${n.is_read?'600':'800'}">${n.message}</div>
+        <div style="color:#9ca3af;font-size:.73rem;margin-top:3px">${n.created_at}</div>
+      </div>`).join('');
+  }).catch(()=>{});
+}
+function toggleNotifPanel(){
+  var panel=document.getElementById('notif_panel');
+  if(panel.style.display==='none'){panel.style.display='block';fetchNotifications();}
+  else{panel.style.display='none';}
+}
+function markAllRead(){
+  fetch('/api/notifications/mark_read',{method:'POST'}).then(()=>{
+    document.getElementById('notif_badge').style.display='none';
+    fetchNotifications();
+  });
+}
+document.addEventListener('click',function(e){
+  var bell=document.getElementById('notif_bell');
+  var panel=document.getElementById('notif_panel');
+  if(panel&&bell&&!bell.contains(e.target)&&!panel.contains(e.target)){panel.style.display='none';}
+});
+fetchNotifications();
+setInterval(fetchNotifications,30000);
+{% endif %}
+</script>
+</body>
+</html>

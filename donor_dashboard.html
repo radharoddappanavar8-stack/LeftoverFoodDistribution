@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Donor Dashboard – LeftoverFood{% endblock %}
+{% block page_title %}🤝 Donor Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-num">{{ stats.total }}</div><div class="stat-lbl">My Total Donations</div></div>
+  <div class="stat-card"><div class="stat-num">{{ stats.available }}</div><div class="stat-lbl">Still Available</div></div>
+  <div class="stat-card or"><div class="stat-num">{{ stats.collected }}</div><div class="stat-lbl">Collected by Volunteer</div></div>
+</div>
+
+<div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+  <a href="{{ url_for('donate') }}" class="btn btn-green"><i class="fas fa-plus"></i> Add New Donation</a>
+</div>
+
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-list"></i> My Food Donations</div>
+  {% if my_food %}
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Food Item</th><th>Quantity</th><th>Type</th><th>Address</th><th>Pickup Time</th><th>Status</th><th>Posted</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for f in my_food %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>
+            <strong>{{ f.title }}</strong>
+            {% if f.description %}<br><small style="color:#6b7280">{{ f.description[:50] }}{% if f.description|length > 50 %}…{% endif %}</small>{% endif %}
+          </td>
+          <td>{{ f.quantity }}</td>
+          <td>{{ f.food_type or '—' }}</td>
+          <td style="font-size:.82rem">{{ f.address[:35] }}{% if f.address|length > 35 %}…{% endif %}</td>
+          <td style="font-size:.82rem">{{ f.pickup_time or '—' }}</td>
+          <td><span class="badge b-{{ f.status|lower }}">{{ f.status }}</span></td>
+          <td style="font-size:.8rem;color:#6b7280">{{ time_ago(f.created_at) }}</td>
+          <td>
+            {% if f.status == 'Available' %}
+            <form method="POST" action="{{ url_for('delete_donation', fid=f.id) }}"
+                  onsubmit="return confirm('Remove this donation?')">
+              <button class="btn btn-red btn-sm" type="submit"><i class="fas fa-trash"></i></button>
+            </form>
+            {% else %}
+            <span style="font-size:.78rem;color:#43a047;font-weight:700">✅ Collected</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:50px;color:#6b7280">
+    <div style="font-size:3.5rem;margin-bottom:14px">🍽️</div>
+    <p style="font-size:1rem;font-weight:600">You haven't donated any food yet.</p>
+    <a href="{{ url_for('donate') }}" class="btn btn-green" style="margin-top:16px">
+      <i class="fas fa-hand-holding-heart"></i> Donate Food Now
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

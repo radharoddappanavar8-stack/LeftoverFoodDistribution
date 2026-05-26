@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Gallery – LeftoverFood{% endblock %}
+{% block page_title %}🖼️ Gallery{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-images"></i> Our Food Distribution Gallery</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
+    {% for img in ['donation1.jpg','spot1.jpg','spot2.jpg','spot3.png','spot4.jpg','volunteers.jpg','event2.jpg'] %}
+    <div style="border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)">
+      <img src="{{ url_for('static', filename='images/'+img) }}" alt="Gallery"
+           style="width:100%;height:180px;object-fit:cover;display:block"
+           onerror="this.style.display='none';this.parentElement.style.background='#e8f5e9';this.parentElement.style.height='180px';this.parentElement.innerHTML+='<div style=&quot;display:flex;align-items:center;justify-content:center;height:180px;font-size:2rem&quot;>🍲</div>'"/>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

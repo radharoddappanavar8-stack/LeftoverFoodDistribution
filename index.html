@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Home – LeftoverFood Distribution System{% endblock %}
+{% block page_title %}🏠 Home{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<div style="background:linear-gradient(135deg,#1b5e20,#43a047);border-radius:16px;padding:32px 36px;margin-bottom:26px;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+  <div>
+    <h2 style="font-size:1.7rem;font-weight:800;font-family:'Poppins',sans-serif">Welcome, {{ session.name }}! 👋</h2>
+    <p style="opacity:.88;margin-top:6px;font-size:1rem">
+      {% if session.role=='donor' %}Share your surplus food and help someone in need today.
+      {% elif session.role=='collector' %}Check available donations and help distribute food.
+      {% else %}Manage the entire food distribution network.{% endif %}
+    </p>
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+      {% if session.role=='donor' %}
+      <a href="{{ url_for('donate') }}" style="background:#f9a825;color:#1b5e20;padding:10px 20px;border-radius:8px;font-weight:800;text-decoration:none;font-size:.9rem">🍲 Donate Food</a>
+      <a href="{{ url_for('donor_dashboard') }}" style="background:rgba(255,255,255,.15);color:#fff;padding:10px 20px;border-radius:8px;font-weight:800;text-decoration:none;font-size:.9rem">📊 My Dashboard</a>
+      {% elif session.role=='collector' %}
+      <a href="{{ url_for('collector_dashboard') }}" style="background:#f9a825;color:#1b5e20;padding:10px 20px;border-radius:8px;font-weight:800;text-decoration:none;font-size:.9rem">🚚 View Available Food</a>
+      {% else %}
+      <a href="{{ url_for('admin_dashboard') }}" style="background:#f9a825;color:#1b5e20;padding:10px 20px;border-radius:8px;font-weight:800;text-decoration:none;font-size:.9rem">⚙️ Admin Panel</a>
+      {% endif %}
+    </div>
+  </div>
+  <div style="font-size:5rem">🍲</div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-num">{{ stats.available }}</div>
+    <div class="stat-lbl">Available Donations</div>
+  </div>
+  <div class="stat-card or">
+    <div class="stat-num">{{ stats.collected }}</div>
+    <div class="stat-lbl">Collected</div>
+  </div>
+  <div class="stat-card bl">
+    <div class="stat-num">{{ stats.donors }}</div>
+    <div class="stat-lbl">Active Donors</div>
+  </div>
+  <div class="stat-card pu">
+    <div class="stat-num">{{ stats.collectors }}</div>
+    <div class="stat-lbl">Collectors</div>
+  </div>
+</div>
+
+<!-- Recent Donations -->
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-clock"></i> Recent Available Donations</div>
+  {% if recent %}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+    {% for food in recent %}
+    <div style="border:1px solid #d8ead9;border-radius:12px;padding:16px;background:#fafffe;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseout="this.style.boxShadow='none'">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <span style="font-weight:800;font-size:.97rem;color:#1b5e20">{{ food.title }}</span>
+        <span class="badge b-available">Available</span>
+      </div>
+      <div style="font-size:.82rem;color:#6b7280;margin-bottom:6px">
+        <i class="fas fa-box" style="margin-right:4px"></i>{{ food.quantity }}
+        &nbsp;|&nbsp;<i class="fas fa-map-marker-alt" style="margin-right:4px"></i>{{ food.address[:30] }}{% if food.address|length > 30 %}…{% endif %}
+      </div>
+      <div style="font-size:.8rem;color:#43a047;font-weight:700">
+        <i class="fas fa-user" style="margin-right:4px"></i>{{ food.donor_name }}
+      </div>
+      {% if food.pickup_time %}
+      <div style="font-size:.78rem;color:#f57f17;margin-top:4px">
+        <i class="fas fa-clock" style="margin-right:4px"></i>Pickup: {{ food.pickup_time }}
+      </div>
+      {% endif %}
+      {% if session.role=='collector' %}
+      <form method="POST" action="{{ url_for('mark_collected', fid=food.id) }}" style="margin-top:10px">
+        <button class="btn btn-orange btn-sm" type="submit" style="width:100%">
+          <i class="fas fa-check"></i> Claim Pickup
+        </button>
+      </form>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:40px;color:#6b7280">
+    <div style="font-size:3rem;margin-bottom:12px">🍽️</div>
+    <p>No donations available right now.</p>
+    {% if session.role=='donor' %}
+    <a href="{{ url_for('donate') }}" class="btn btn-green" style="margin-top:14px">Be the first to donate!</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

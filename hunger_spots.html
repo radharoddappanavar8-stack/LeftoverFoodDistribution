@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Hunger Spots – LeftoverFood{% endblock %}
+{% block page_title %}📍 Hunger Spots{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-map-marker-alt"></i> Known Hunger Spots in the City</div>
+  <p style="color:#6b7280;margin-bottom:20px;font-size:.9rem">These are areas where food need is high. Collectors are encouraged to deliver food to these locations.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+    {% set spots = [
+      ('Railway Station Area','High footfall of daily wage workers and migrants','🚉'),
+      ('Bus Stand','Travelers in need, especially overnight','🚌'),
+      ('Government Hospital','Attendees of patients who travel from far','🏥'),
+      ('Orphanage Zone','Children's homes needing regular supply','🏡'),
+      ('Old Age Home','Elderly residents needing nutritious food','👴'),
+      ('Slum Area – North','Dense population with limited food access','🏘️'),
+    ] %}
+    {% for name, desc, icon in spots %}
+    <div style="border:1px solid #d8ead9;border-radius:11px;padding:18px;background:#fafffe">
+      <div style="font-size:2rem;margin-bottom:8px">{{ icon }}</div>
+      <div style="font-weight:800;color:#1b5e20;margin-bottom:4px">{{ name }}</div>
+      <div style="font-size:.82rem;color:#6b7280">{{ desc }}</div>
+      <div style="margin-top:10px">
+        <span style="background:#e8f5e9;color:#2e7d32;padding:3px 9px;border-radius:20px;font-size:.75rem;font-weight:700">High Need</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

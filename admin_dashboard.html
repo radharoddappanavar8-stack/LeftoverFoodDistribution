@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard – LeftoverFood{% endblock %}
+{% block page_title %}⚙️ Admin Dashboard{% endblock %}
+
+{% block content %}
+<!-- Stats -->
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-num">{{ stats.total_users }}</div><div class="stat-lbl">Total Users</div></div>
+  <div class="stat-card bl"><div class="stat-num">{{ stats.donors }}</div><div class="stat-lbl">Donors</div></div>
+  <div class="stat-card pu"><div class="stat-num">{{ stats.collectors }}</div><div class="stat-lbl">Collectors</div></div>
+  <div class="stat-card"><div class="stat-num">{{ stats.total_donations }}</div><div class="stat-lbl">Total Donations</div></div>
+  <div class="stat-card or"><div class="stat-num">{{ stats.available }}</div><div class="stat-lbl">Available</div></div>
+  <div class="stat-card" style="border-top-color:#f9a825"><div class="stat-num" style="color:#f57f17">{{ stats.collected }}</div><div class="stat-lbl">Collected</div></div>
+</div>
+
+<!-- Users Table -->
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-users"></i> All Registered Users</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Name</th><th>Username</th><th>Email</th><th>Phone</th><th>Role</th><th>Joined</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td><strong>{{ u.name }}</strong></td>
+          <td>{{ u.username }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.phone or '—' }}</td>
+          <td><span class="badge b-{{ u.role }}">{{ u.role }}</span></td>
+          <td style="font-size:.8rem;color:#6b7280">{{ time_ago(u.created_at ) if u.created_at else '—') }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('delete_user', uid=u.id) }}"
+                  onsubmit="return confirm('Delete user {{ u.name }}? All their donations will also be removed.')">
+              <button class="btn btn-red btn-sm" type="submit"><i class="fas fa-trash"></i> Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" style="text-align:center;color:#6b7280;padding:24px">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- All Donations -->
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-hand-holding-heart"></i> All Food Donations</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Food Item</th><th>Quantity</th><th>Address</th><th>Donor</th><th>Pickup Time</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for f in donations %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td><strong>{{ f.title }}</strong><br><small style="color:#6b7280">{{ f.description or '' }}</small></td>
+          <td>{{ f.quantity }}</td>
+          <td style="font-size:.82rem">{{ f.address }}</td>
+          <td>{{ f.donor_name }}<br><small style="color:#6b7280">{{ f.donor_phone or '' }}</small></td>
+          <td style="font-size:.82rem">{{ f.pickup_time or '—' }}</td>
+          <td><span class="badge b-{{ f.status|lower }}">{{ f.status }}</span></td>
+          <td>
+            <form method="POST" action="{{ url_for('admin_update_status', food_id=f.id) }}" style="display:flex;gap:4px;align-items:center">
+              <select name="status" style="padding:4px 7px;font-size:.78rem;border-radius:6px;border:1px solid #ccc">
+                <option {% if f.status=='Available' %}selected{% endif %}>Available</option>
+                <option {% if f.status=='Collected' %}selected{% endif %}>Collected</option>
+              </select>
+              <button class="btn btn-green btn-sm" type="submit"><i class="fas fa-save"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" style="text-align:center;color:#6b7280;padding:24px">No donations yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Collected Summary -->
+{% if collections %}
+<div class="card">
+  <div class="card-hdr"><i class="fas fa-check-circle"></i> Collected Food Summary</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Food Item</th><th>Donor</th><th>Collector</th><th>Collector Phone</th></tr>
+      </thead>
+      <tbody>
+        {% for c in collections %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td><strong>{{ c.title }}</strong> – {{ c.quantity }}</td>
+          <td>{{ c.donor_name }}</td>
+          <td>{{ c.collector_name }}</td>
+          <td>{{ c.collector_phone or '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
